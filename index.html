@@ -2,128 +2,148 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>I Have A Question...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Quick Question</title>
     <style>
         :root {
             --primary: #ff4d6d;
-            --secondary: #ff85a1;
             --bg: #fff0f3;
         }
 
         body {
             margin: 0;
+            padding: 20px;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: var(--bg);
-            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             overflow: hidden;
-        }
-
-        /* Floating Hearts Background */
-        .heart {
-            position: absolute;
-            color: var(--secondary);
-            opacity: 0.5;
-            animation: float 6s linear infinite;
-            z-index: 0;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+            box-sizing: border-box;
         }
 
         .container {
             background: white;
-            padding: 3rem;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.15);
             text-align: center;
+            width: 100%;
+            max-width: 350px;
             z-index: 10;
-            max-width: 400px;
-            border: 4px solid var(--secondary);
         }
 
-        h1 { color: var(--primary); font-size: 2rem; }
+        h1 { color: var(--primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
         
         .btn-group {
-            margin-top: 2rem;
             display: flex;
-            justify-content: center;
-            gap: 20px;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
 
         button {
-            padding: 12px 25px;
-            font-size: 1.2rem;
+            padding: 15px 30px;
+            font-size: 1.1rem;
             border: none;
-            border-radius: 50px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.3s;
+            width: 100%;
+            transition: all 0.2s ease-in-out;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        #yesBtn { background-color: var(--primary); color: white; }
-        #yesBtn:hover { transform: scale(1.1); background-color: #ff0a54; }
+        #yesBtn { 
+            background-color: var(--primary); 
+            color: white;
+            z-index: 20;
+        }
 
         #noBtn {
-            background-color: #a4133c;
-            color: white;
-            position: absolute;
+            background-color: #eee;
+            color: #666;
+            font-size: 0.9rem;
+            width: auto;
         }
 
-        .hidden { display: none; }
+        .heart {
+            position: absolute;
+            color: var(--primary);
+            opacity: 0.5;
+            animation: float 5s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(110vh); opacity: 1; }
+            100% { transform: translateY(-10vh); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container" id="quiz">
-        <div style="font-size: 4rem;">💌</div>
-        <h1>Will you be my Valentine?</h1>
-        <p>Choose wisely... (or try to).</p>
-        <div class="btn-group">
-            <button id="yesBtn" onclick="celebrate()">YES!</button>
-            <button id="noBtn" onmouseover="escape()">No</button>
+    <div class="container" id="main-box">
+        <div id="content">
+            <div style="font-size: 3rem;">🌹</div>
+            <h1 id="headline">Will you be my Valentine?</h1>
+            <div class="btn-group">
+                <button id="yesBtn" onclick="celebrate()">YES</button>
+                <button id="noBtn" onclick="growYes()">No</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Create floating background hearts
+        let scale = 1;
+        const noMessages = [
+            "Are you sure?",
+            "Really?",
+            "Think again!",
+            "Last chance!",
+            "Surely not?",
+            "You're breaking my heart ;(",
+            "I'm gonna cry...",
+            "Just say yes!"
+        ];
+        let msgIndex = 0;
+
+        function growYes() {
+            scale += 0.5;
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const headline = document.getElementById('headline');
+            
+            // Make Yes button bigger
+            yesBtn.style.transform = `scale(${scale})`;
+            
+            // Update No button text
+            noBtn.innerText = noMessages[msgIndex];
+            msgIndex = (msgIndex + 1) % noMessages.length;
+
+            // Shift layout as it grows
+            if (scale > 3) {
+                noBtn.style.opacity = "0.5";
+            }
+        }
+
+        function celebrate() {
+            document.getElementById('main-box').innerHTML = `
+                <div style="font-size: 4rem;">💖</div>
+                <h1 style="color: #ff4d6d;">I KNEW YOU'D SAY YES!</h1>
+                <p>Pack your bags, we're going on a date! ❤️</p>
+            `;
+            setInterval(createHeart, 200);
+        }
+
         function createHeart() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
             heart.innerHTML = '❤️';
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
             document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 6000);
-        }
-        setInterval(createHeart, 300);
-
-        // Make the 'No' button run away
-        function escape() {
-            const btn = document.getElementById('noBtn');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
-        }
-
-        // Final celebration logic
-        function celebrate() {
-            document.getElementById('quiz').innerHTML = `
-                <div style="font-size: 5rem;">💖</div>
-                <h1 style="color: #ff4d6d;">I KNEW IT!</h1>
-                <p>You're stuck with me on the 14th now. No refunds!</p>
-                <div style="margin-top: 15px; font-style: italic;">(The 'No' button was broken anyway.)</div>
-            `;
-            setInterval(() => {
-                for(let i=0; i<5; i++) createHeart();
-            }, 100);
+            setTimeout(() => heart.remove(), 5000);
         }
     </script>
 </body>

@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You 💌</title>
+  <style>
+    :root{
+      --bg1:#fff7fb;
+      --bg2:#fff1f6;
+      --ink:#111827;
+      --muted:#6b7280;
+      --rose:#fb7185;
+      --rose2:#fda4af;
+      --card: rgba(255,255,255,.72);
+      --border: rgba(251,113,133,.22);
+      --shadow: 0 22px 70px rgba(17,24,39,.14);
+      --r: 26px;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--ink);
+      display:grid;
+      place-items:center;
+      padding:24px;
+      background:
+        radial-gradient(900px 600px at 20% 20%, var(--bg2), transparent 60%),
+        radial-gradient(700px 520px at 85% 25%, #ffe4e6, transparent 55%),
+        radial-gradient(900px 700px at 50% 95%, #fff7ed, transparent 60%),
+        #ffffff;
+      overflow:hidden;
+    }
+
+    /* soft floating hearts */
+    .hearts{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.55;
+      filter: blur(.2px);
+    }
+    .heart{
+      position:absolute;
+      font-size:14px;
+      animation: floatUp linear infinite;
+      opacity:.0;
+      transform: translateY(20px) scale(.9);
+    }
+    @keyframes floatUp{
+      0%   { transform: translateY(40px) scale(.9); opacity:0; }
+      12%  { opacity:.35; }
+      80%  { opacity:.28; }
+      100% { transform: translateY(-120vh) scale(1.25); opacity:0; }
+    }
+
+    .wrap{ width:min(720px, 100%); position:relative; }
+
+    .card{
+      position:relative;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: calc(var(--r) + 10px);
+      box-shadow: var(--shadow);
+      padding: 26px 22px;
+      backdrop-filter: blur(14px);
+      overflow:hidden;
+    }
+
+    /* subtle shine */
+    .shine{
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle at 30% 25%, rgba(255,255,255,.60), transparent 35%),
+                  radial-gradient(circle at 70% 70%, rgba(251,113,133,.18), transparent 40%);
+      animation: drift 10s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes drift{
+      0%,100%{ transform: translate3d(0,0,0) rotate(0deg); }
+      50%{ transform: translate3d(-4%, 3%, 0) rotate(6deg); }
+    }
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      position:relative;
+      z-index:1;
+    }
+
+    .title{
+      margin: 2px 0 8px;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+    .title .accent{ color: var(--rose); }
+
+    .sub{
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+      margin: 0;
+      max-width: 46ch;
+    }
+
+    .pill{
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid rgba(148,163,184,.25);
+      background: rgba(255,255,255,.55);
+      box-shadow: 0 10px 30px rgba(17,24,39,.08);
+      white-space:nowrap;
+    }
+
+    .question{
+      position:relative;
+      z-index:1;
+      margin-top: 18px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    /* KEY: never overlaps */
+    .ctaRow{
+      position:relative;
+      z-index:1;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap: 14px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+      isolation:isolate;
+    }
+
+    button{
+      border:0;
+      cursor:pointer;
+      border-radius: 18px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 750;
+      letter-spacing: -0.01em;
+      transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+      position: relative;
+      user-select:none;
+      touch-action: manipulation;
+      outline: none;
+    }
+
+    /* Cute primary button */
+    #yesBtn{
+      --glow: 0 14px 30px rgba(251,113,133,.22);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.50)),
+        radial-gradient(120px 60px at 30% 20%, rgba(255,255,255,.75), transparent 60%),
+        linear-gradient(135deg, var(--rose2), var(--rose));
+      color:#111827;
+      border: 1px solid rgba(251,113,133,.35);
+      box-shadow: var(--glow);
+      transform-origin: center;
+      z-index: 1;
+      will-change: transform;
+    }
+    #yesBtn::after{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      border-radius: 18px;
+      background: radial-gradient(120px 40px at 20% 15%, rgba(255,255,255,.55), transparent 55%);
+      opacity:.55;
+      pointer-events:none;
+    }
+    #yesBtn:hover{
+      filter: brightness(1.03);
+      transform: translateY(-1px) scale(var(--yesScale, 1));
+      box-shadow: 0 16px 36px rgba(251,113,133,.26);
+    }
+    #yesBtn:active{
+      transform: translateY(0) scale(calc(var(--yesScale, 1) * 0.98));
+    }
+
+    /* Soft secondary button */
+    #noBtn{
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(148,163,184,.28);
+      box-shadow: 0 12px 28px rgba(17,24,39,.10);
+      color:#111827;
+      z-index: 2; /* always clickable */
+    }
+    #noBtn:hover{ transform: translateY(-1px); filter: brightness(0.99); }
+    #noBtn:active{ transform: translateY(0) scale(0.99); }
+
+    .msg{
+      position:relative;
+      z-index:1;
+      margin-top: 14px;
+      text-align:center;
+      font-size: 14px;
+      color: var(--muted);
+      min-height: 22px;
+    }
+
+    .success{
+      position:relative;
+      z-index:1;
+      margin-top: 14px;
+      display:none;
+      border-radius: 22px;
+      padding: 14px 16px;
+      border: 1px solid rgba(251,113,133,.28);
+      background: rgba(251,113,133,.08);
+      color: #111827;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .success.show{
+      display:block;
+      animation: pop .28s ease-out;
+    }
+    @keyframes pop{
+      from{ transform: translateY(6px); opacity:0; }
+      to{ transform: translateY(0); opacity:1; }
+    }
+
+    footer{
+      position:relative;
+      z-index:1;
+      margin-top: 14px;
+      text-align:center;
+      font-size: 12px;
+      color: rgba(107,114,128,.85);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- floating hearts layer -->
+  <div class="hearts" aria-hidden="true" id="hearts"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="shine" aria-hidden="true"></div>
+
+      <div class="top">
+        <div>
+          <h1 class="title">A tiny question <span class="accent">for you</span>.</h1>
+          <p class="sub">If you smile even a little, I win. 💗</p>
+        </div>
+        <div class="pill" id="pill">tap “No” if you’re brave</div>
+      </div>
+
+      <div class="question" id="question">Will you be my Valentine? 💌</div>
+
+      <div class="ctaRow" id="ctaRow">
+        <button id="yesBtn" aria-label="Yes">Yes 💘</button>
+        <button id="noBtn" aria-label="No">No 🙃</button>
+      </div>
+
+      <div class="msg" id="msg"></div>
+
+      <div class="success" id="success">
+        Okay… you said yes. That’s officially my favorite plot twist.<br/>
+        I owe you a date, a dessert, and one soft forehead kiss. 🌙
+      </div>
+
+      <footer>made with a little blush and good intentions</footer>
+    </div>
+  </div>
+
+  <script>
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn  = document.getElementById("noBtn");
+    const ctaRow = document.getElementById("ctaRow");
+    const msg    = document.getElementById("msg");
+    const pill   = document.getElementById("pill");
+    const success= document.getElementById("success");
+    const question = document.getElementById("question");
+    const hearts = document.getElementById("hearts");
+
+    let yesClicks = 0;
+    let noClicks = 0;
+
+    const yesLines = [
+      "That was smooth. 😵‍💫",
+      "You just made my day.",
+      "Okay, romantic.",
+      "I’m smiling like an idiot now.",
+      "Lock it in. 🥂"
+    ];
+
+    const noLines = [
+      "No? okay. I’ll be patient. 😌",
+      "Hard to get… noted.",
+      "You’re adorable and difficult.",
+      "This ‘No’ has flirting energy.",
+      "Your honor, she’s teasing."
+    ];
+
+    function setYesScale(clicks){
+      const scale = Math.min(1 + clicks * 0.12, 1.85);
+      yesBtn.style.setProperty("--yesScale", scale);
+
+      // make room so it NEVER overlaps the No button
+      const gap = 14 + clicks * 7;
+      ctaRow.style.gap = gap + "px";
+    }
+
+    function burstHearts(count = 8){
+      const emojis = ["💗","💖","💕","💘","🌸"];
+      for(let i=0;i<count;i++){
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+        const left = Math.random()*100;
+        const dur = 6 + Math.random()*6;
+        const delay = Math.random()*0.6;
+        const size = 12 + Math.random()*12;
+
+        h.style.left = left + "vw";
+        h.style.bottom = (-10 - Math.random()*20) + "px";
+        h.style.animationDuration = dur + "s";
+        h.style.animationDelay = delay + "s";
+        h.style.fontSize = size + "px";
+
+        hearts.appendChild(h);
+
+        // cleanup
+        setTimeout(() => h.remove(), (dur + delay) * 1000);
+      }
+    }
+
+    yesBtn.addEventListener("click", () => {
+      yesClicks++;
+      setYesScale(yesClicks);
+
+      msg.textContent = yesLines[yesClicks % yesLines.length];
+      pill.textContent = "status: blushing 💞";
+
+      success.classList.add("show");
+      question.textContent = "Okay… when are we going out? 🥂";
+      noBtn.textContent = "Stop teasing 🙃";
+
+      burstHearts(10);
+    });
+
+    noBtn.addEventListener("click", () => {
+      noClicks++;
+
+      // tiny wiggle (cute, not chaotic)
+      noBtn.animate(
+        [
+          { transform: "translateX(0)" },
+          { transform: "translateX(-6px)" },
+          { transform: "translateX(6px)" },
+          { transform: "translateX(0)" }
+        ],
+        { duration: 220, iterations: 1 }
+      );
+
+      msg.textContent = noLines[noClicks % noLines.length];
+      pill.textContent = "hint: the ‘Yes’ is waiting 👀";
+
+      burstHearts(4);
+    });
+
+    // ambient hearts occasionally
+    setInterval(() => burstHearts(2), 2400);
+
+    // init
+    setYesScale(0);
+    burstHearts(6);
+  </script>
+</body>
+</html>

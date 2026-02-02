@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valentine’s Invite 💌</title>
+  <style>
+    :root{
+      --bg:#fff7fb;
+      --ink:#0f172a;
+      --muted:#6b7280;
+      --rose:#fb7185;
+      --rose2:#fda4af;
+      --card: rgba(255,255,255,.74);
+      --border: rgba(251,113,133,.22);
+      --shadow: 0 24px 80px rgba(15,23,42,.14);
+      --r: 28px;
+    }
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 650px at 15% 15%, #fff1f6, transparent 60%),
+        radial-gradient(800px 600px at 85% 20%, #ffe4e6, transparent 55%),
+        radial-gradient(900px 700px at 50% 95%, #fff7ed, transparent 60%),
+        var(--bg);
+      display:grid;
+      place-items:center;
+      padding:22px;
+      overflow:hidden;
+    }
+
+    /* floating hearts */
+    .fx{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.6;
+    }
+    .fx .h{
+      position:absolute;
+      font-size:14px;
+      opacity:0;
+      transform: translateY(20px) scale(.9);
+      animation: floatUp linear infinite;
+      filter: drop-shadow(0 8px 18px rgba(251,113,133,.14));
+    }
+    @keyframes floatUp{
+      0%   { transform: translateY(50px) scale(.9); opacity:0; }
+      12%  { opacity:.35; }
+      80%  { opacity:.25; }
+      100% { transform: translateY(-120vh) scale(1.25); opacity:0; }
+    }
+
+    .wrap{ width:min(760px, 100%); position:relative; }
+
+    .card{
+      position:relative;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius: calc(var(--r) + 10px);
+      box-shadow: var(--shadow);
+      padding: 26px 22px;
+      backdrop-filter: blur(14px);
+      overflow:hidden;
+    }
+
+    /* soft shine */
+    .shine{
+      position:absolute; inset:-45%;
+      background:
+        radial-gradient(circle at 28% 24%, rgba(255,255,255,.70), transparent 36%),
+        radial-gradient(circle at 70% 68%, rgba(251,113,133,.18), transparent 40%);
+      animation: drift 10s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes drift{
+      0%,100%{ transform: translate3d(0,0,0) rotate(0deg); }
+      50%{ transform: translate3d(-4%, 3%, 0) rotate(6deg); }
+    }
+
+    .top{
+      position:relative; z-index:1;
+      display:flex; justify-content:space-between; align-items:flex-start; gap:14px;
+    }
+    .kicker{
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+    .title{
+      margin:0 0 10px;
+      font-size: clamp(30px, 4vw, 46px);
+      letter-spacing:-.045em;
+      line-height:1.02;
+    }
+    .title .accent{ color: var(--rose); }
+
+    .meta{
+      margin:0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 52ch;
+    }
+
+    .pill{
+      border-radius: 999px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      border: 1px solid rgba(148,163,184,.25);
+      background: rgba(255,255,255,.55);
+      box-shadow: 0 10px 30px rgba(15,23,42,.08);
+      white-space:nowrap;
+    }
+
+    .inviteBox{
+      position:relative; z-index:1;
+      margin-top: 18px;
+      border-radius: var(--r);
+      border: 1px solid rgba(148,163,184,.20);
+      background: rgba(255,255,255,.50);
+      padding: 16px;
+    }
+    .inviteLine{
+      font-size: 16px;
+      font-weight: 750;
+      letter-spacing:-.02em;
+      margin: 0 0 10px;
+    }
+    .details{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin: 0;
+      padding: 0;
+      list-style:none;
+      color: #334155;
+      font-size: 13px;
+    }
+    .details li{
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.65);
+      border: 1px solid rgba(148,163,184,.18);
+    }
+
+    /* never overlap buttons */
+    .ctaRow{
+      position:relative; z-index:1;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 16px;
+      isolation:isolate;
+    }
+
+    button{
+      border:0;
+      cursor:pointer;
+      border-radius: 18px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+      transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+      position: relative;
+      user-select:none;
+      touch-action: manipulation;
+      outline: none;
+    }
+
+    #yesBtn{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,255,255,.48)),
+        radial-gradient(120px 60px at 30% 20%, rgba(255,255,255,.72), transparent 60%),
+        linear-gradient(135deg, var(--rose2), var(--rose));
+      color:#0f172a;
+      border: 1px solid rgba(251,113,133,.36);
+      box-shadow: 0 16px 36px rgba(251,113,133,.22);
+      transform-origin: center;
+      z-index:1;
+      will-change: transform;
+    }
+    #yesBtn:hover{
+      filter: brightness(1.03);
+      transform: translateY(-1px) scale(var(--yesScale, 1));
+      box-shadow: 0 18px 44px rgba(251,113,133,.26);
+    }
+    #yesBtn:active{
+      transform: translateY(0) scale(calc(var(--yesScale, 1) * 0.98));
+    }
+
+    #noBtn{
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(148,163,184,.28);
+      box-shadow: 0 14px 30px rgba(15,23,42,.10);
+      color:#0f172a;
+      z-index:2; /* always clickable */
+    }
+    #noBtn:hover{ transform: translateY(-1px); filter: brightness(0.99); }
+    #noBtn:active{ transform: translateY(0) scale(0.99); }
+
+    .msg{
+      position:relative; z-index:1;
+      margin-top: 14px;
+      text-align:center;
+      font-size: 14px;
+      color: var(--muted);
+      min-height: 22px;
+    }
+
+    .result{
+      position:relative; z-index:1;
+      margin-top: 14px;
+      display:none;
+      border-radius: 22px;
+      padding: 14px 16px;
+      border: 1px solid rgba(251,113,133,.28);
+      background: rgba(251,113,133,.08);
+      color: #0f172a;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .result.show{
+      display:block;
+      animation: pop .28s ease-out;
+    }
+    @keyframes pop{
+      from{ transform: translateY(6px); opacity:0; }
+      to{ transform: translateY(0); opacity:1; }
+    }
+
+    .miniRow{
+      position:relative; z-index:1;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .ghost{
+      font-weight:700;
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,.22);
+      background: rgba(255,255,255,.50);
+      color: #334155;
+      box-shadow: 0 10px 24px rgba(15,23,42,.08);
+    }
+
+    footer{
+      position:relative; z-index:1;
+      margin-top: 14px;
+      text-align:center;
+      font-size: 12px;
+      color: rgba(107,114,128,.85);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="fx" aria-hidden="true" id="fx"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <div class="shine" aria-hidden="true"></div>
+
+      <div class="top">
+        <div>
+          <p class="kicker" id="kicker">VALENTINE’S INVITE</p>
+          <h1 class="title">Hey <span class="accent" id="toName">You</span>.</h1>
+          <p class="meta" id="meta">
+            I’m asking properly — no pressure, just vibes.
+          </p>
+        </div>
+        <div class="pill" id="pill">tap “Yes” 😵‍💫</div>
+      </div>
+
+      <div class="inviteBox">
+        <p class="inviteLine" id="inviteLine">Will you be my Valentine? 💌</p>
+        <ul class="details" id="details">
+          <li id="dDate">📅 Fri, 14 Feb</li>
+          <li id="dTime">🕖 7:30 PM</li>
+          <li id="dPlace">📍 Dinner + something sweet</li>
+        </ul>
+
+        <div class="ctaRow" id="ctaRow">
+          <button id="yesBtn" aria-label="Yes">Yes, I’m in 💘</button>
+          <button id="noBtn" aria-label="No">I can’t 😔</button>
+        </div>
+
+        <div class="msg" id="msg"></div>
+
+        <div class="result" id="result"></div>
+
+        <div class="miniRow">
+          <button class="ghost" id="copyBtn" type="button">Copy details</button>
+          <button class="ghost" id="resetBtn" type="button">Reset</button>
+        </div>
+      </div>
+
+      <footer>simple • cute • made for Valentine’s</footer>
+    </div>
+  </div>
+
+  <script>
+    // ===== EDIT THESE =====
+    const INVITE = {
+      to: "Julia",                 // who you're inviting
+      from: "Moh",                 // your name
+      date: "Friday, 14 February",
+      time: "7:30 PM",
+      place: "Dinner + dessert (you pick the vibe)",
+      note: "I’ll plan it properly — you just show up looking dangerous."
+    };
+    // ======================
+
+    const yesBtn = document.getElementById("yesBtn");
+    const noBtn  = document.getElementById("noBtn");
+    const ctaRow = document.getElementById("ctaRow");
+    const msg    = document.getElementById("msg");
+    const pill   = document.getElementById("pill");
+    const result = document.getElementById("result");
+
+    const toName = document.getElementById("toName");
+    const meta   = document.getElementById("meta");
+    const inviteLine = document.getElementById("inviteLine");
+
+    const dDate  = document.getElementById("dDate");
+    const dTime  = document.getElementById("dTime");
+    const dPlace = document.getElementById("dPlace");
+
+    const fx = document.getElementById("fx");
+    const copyBtn = document.getElementById("copyBtn");
+    const resetBtn = document.getElementById("resetBtn");
+
+    toName.textContent = INVITE.to || "You";
+    meta.textContent = `From ${INVITE.from} — ${INVITE.note}`;
+    inviteLine.textContent = `Will you be my Valentine, ${INVITE.to}? 💌`;
+
+    dDate.textContent  = `📅 ${INVITE.date}`;
+    dTime.textContent  = `🕖 ${INVITE.time}`;
+    dPlace.textContent = `📍 ${INVITE.place}`;
+
+    let yesClicks = 0;
+    let noClicks = 0;
+
+    const yesLines = [
+      "Okay wow. That’s a yes. 😵‍💫💘",
+      "Perfect. I’ll book it.",
+      "You just made my whole week.",
+      "Alright… I’m excited now.",
+      "We’re locked in. 🥂"
+    ];
+
+    const noLines = [
+      "Okay. But you owe me a rain-check. 😌",
+      "Fair… I’ll miss you though.",
+      "Noted. One reschedule token granted.",
+      "You’re busy. I respect it.",
+      "Okay… I’ll behave. (Barely.)"
+    ];
+
+    function setYesScale(clicks){
+      // cap so it never becomes ridiculous
+      const scale = Math.min(1 + clicks * 0.10, 1.65);
+      yesBtn.style.setProperty("--yesScale", scale);
+
+      // increase spacing so it NEVER covers the no button
+      ctaRow.style.gap = (14 + clicks * 7) + "px";
+    }
+
+    function floatHearts(count=8){
+      const emojis = ["💗","💖","💕","💘","🌸"];
+      for(let i=0;i<count;i++){
+        const h = document.createElement("div");
+        h.className = "h";
+        h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+
+        const left = Math.random()*100;
+        const dur = 6 + Math.random()*6;
+        const delay = Math.random()*0.5;
+        const size = 12 + Math.random()*12;
+
+        h.style.left = left + "vw";
+        h.style.bottom = (-10 - Math.random()*20) + "px";
+        h.style.animationDuration = dur + "s";
+        h.style.animationDelay = delay + "s";
+        h.style.fontSize = size + "px";
+
+        fx.appendChild(h);
+        setTimeout(() => h.remove(), (dur + delay) * 1000);
+      }
+    }
+
+    function showResult(text){
+      result.textContent = text;
+      result.classList.add("show");
+    }
+
+    yesBtn.addEventListener("click", () => {
+      yesClicks++;
+      setYesScale(yesClicks);
+
+      msg.textContent = yesLines[yesClicks % yesLines.length];
+      pill.textContent = "status: blushing 💞";
+
+      showResult(`Yesss. ${INVITE.date} at ${INVITE.time}. I’ll confirm the plan — you’re my Valentine. 🌙`);
+
+      // tiny celebration
+      floatHearts(12);
+
+      // make "no" button softer after yes (still clickable)
+      noBtn.textContent = "Okay okay 😅";
+    });
+
+    noBtn.addEventListener("click", () => {
+      noClicks++;
+
+      noBtn.animate(
+        [
+          { transform: "translateX(0)" },
+          { transform: "translateX(-6px)" },
+          { transform: "translateX(6px)" },
+          { transform: "translateX(0)" }
+        ],
+        { duration: 220, iterations: 1 }
+      );
+
+      msg.textContent = noLines[noClicks % noLines.length];
+      pill.textContent = "hint: you can still say yes 👀";
+      floatHearts(4);
+
+      showResult(`No worries. I’ll take a rain-check — but I’m still claiming ${INVITE.to} for a date soon. 💗`);
+    });
+
+    copyBtn.addEventListener("click", async () => {
+      const text =
+`Valentine’s Invite 💌
+To: ${INVITE.to}
+From: ${INVITE.from}
+When: ${INVITE.date} • ${INVITE.time}
+Where: ${INVITE.place}
+Message: Will you be my Valentine?`;
+
+      try{
+        await navigator.clipboard.writeText(text);
+        msg.textContent = "Copied. Now send it like you meant it. ✅";
+      }catch(e){
+        msg.textContent = "Copy failed — select the text and copy manually.";
+      }
+    });
+
+    resetBtn.addEventListener("click", () => {
+      yesClicks = 0;
+      noClicks = 0;
+      msg.textContent = "";
+      pill.textContent = "tap “Yes” 😵‍💫";
+      result.classList.remove("show");
+      result.textContent = "";
+      noBtn.textContent = "I can’t 😔";
+      setYesScale(0);
+      floatHearts(6);
+    });
+
+    // ambient hearts
+    setYesScale(0);
+    floatHearts(8);
+    setInterval(() => floatHearts(2), 2500);
+  </script>
+</body>
+</html>
